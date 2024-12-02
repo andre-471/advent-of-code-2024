@@ -10,7 +10,7 @@ public class Day01 {
         partTwo();
     }
 
-    public static void partOne(){
+    public static void partOne() {
         // reading and parsing
         ArrayList<String> data = FileHelper.readWithFiles("input/Day01");
         ArrayList<Integer> leftSide = new ArrayList<>();
