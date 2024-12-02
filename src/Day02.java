@@ -14,8 +14,9 @@ public class Day02 {
         ArrayList<int[]> parsedData = data.stream().
                 map(str -> Arrays.stream(str.split(" "))
                         .mapToInt(Integer::valueOf)
-                        .toArray()
-                ).collect(Collectors.toCollection(ArrayList::new));
+                        .toArray())
+                .collect(Collectors.toCollection(ArrayList::new));
+
     }
 
 }
