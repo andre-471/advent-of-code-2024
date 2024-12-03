@@ -12,7 +12,7 @@ public class Day01 {
 
     public static void partOne() {
         // reading and parsing
-        ArrayList<String> data = FileHelper.readWithFiles("input/Day01");
+        ArrayList<String> data = FileHelper.read("input/Day01");
         ArrayList<Integer> leftSide = new ArrayList<>();
         ArrayList<Integer> rightSide = new ArrayList<>();
         data.forEach(str -> {
@@ -39,7 +39,7 @@ public class Day01 {
         HashMap<Integer, Integer> leftSideCount = new HashMap<>();
         HashMap<Integer, Integer> rightSideCount = new HashMap<>();
 
-        try (BufferedReader br = FileHelper.readWithBuffered("input/Day01")) {
+        try (BufferedReader br = FileHelper.returnBuffer("input/Day01")) {
             String line;
 
             while ((line = br.readLine()) != null) {

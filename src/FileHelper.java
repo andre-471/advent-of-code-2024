@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class FileHelper {
-    public static ArrayList<String> readWithFiles(String path) {
+    public static ArrayList<String> read(String path) {
         try {
             return new ArrayList<>(Files.readAllLines(Path.of(path)));
         } catch (IOException e) {
@@ -14,7 +14,17 @@ public class FileHelper {
         return new ArrayList<>();
     }
 
-    public static BufferedReader readWithBuffered(String path) throws FileNotFoundException {
+    public static BufferedReader returnBuffer(String path) throws FileNotFoundException {
         return new BufferedReader(new FileReader(path));
+    }
+
+    public static String readToString(String path) {
+        try {
+            return Files.readString(Path.of(path));
+        } catch (IOException e) {
+            System.out.println("Unable to read from " + path);
+        }
+
+        return "";
     }
 }

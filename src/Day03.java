@@ -6,11 +6,12 @@ import java.util.regex.Pattern;
 public class Day03 {
     public static void main(String[] args) {
         partOne();
-        partTwo();
+        partTwov1();
+        partTwov2();
     }
 
     public static void partOne() {
-        ArrayList<String> data = FileHelper.readWithFiles("input/Day03");
+        ArrayList<String> data = FileHelper.read("input/Day03");
         Pattern pattern = Pattern.compile("mul\\((\\d+),(\\d+)\\)");
 
         int sum = 0;
@@ -26,28 +27,47 @@ public class Day03 {
         System.out.println(sum);
     }
 
-    public static void partTwo() {
-        ArrayList<String> data = FileHelper.readWithFiles("input/Day03");
+    public static void partTwov1() {
+        String data = FileHelper.readToString("input/Day03");
         Pattern pattern = Pattern.compile("mul\\((\\d+),(\\d+)\\)");
 
         int sum = 0;
 
-        for (String line : data) {
-            String[][] splitByDo = Arrays.stream(line.split("do\\(\\)"))
-                    .map(array -> array.split("don't\\(\\)"))
-                    .toArray(String[][]::new); // Each array is after a do (plus first one), so it can be used
+        String[][] splitByDo = Arrays.stream(data.split("do\\(\\)"))
+                .map(array -> array.split("don't\\(\\)"))
+                .toArray(String[][]::new); // Each array is after a do (plus first one), so it can be used
 
-            for (String[] splitByDont : splitByDo) {
-                // Since split by don'ts, everything after first element will be after a don't, so ignore it
-                Matcher matcher = pattern.matcher(splitByDont[0]);
+        for (String[] splitByDont : splitByDo) {
+            // Since split by don'ts, everything after first element will be after a don't, so ignore it
+            Matcher matcher = pattern.matcher(splitByDont[0]);
 
-                while (matcher.find()) {
-                    sum += Integer.parseInt(matcher.group(1)) * Integer.parseInt(matcher.group(2));
-                }
+            while (matcher.find()) {
+                sum += Integer.parseInt(matcher.group(1)) * Integer.parseInt(matcher.group(2));
             }
-
-
         }
+
+
+        System.out.println(sum);
+    }
+
+    public static void partTwov2() {
+        String data = FileHelper.readToString("input/Day03");
+        Pattern pattern = Pattern.compile("mul\\((\\d+),(\\d+)\\)|(do\\(\\))|(don't\\(\\))");
+        Matcher matcher = pattern.matcher(data);
+
+        int sum = 0;
+        boolean enabled = true;
+
+        while (matcher.find()) {
+            if (matcher.group(3) != null) { // matches do
+                enabled = true;
+            } else if (matcher.group(4) != null) { // matches don't
+                enabled = false;
+            } else if (enabled) {
+                sum += Integer.parseInt(matcher.group(1)) * Integer.parseInt(matcher.group(2));
+            }
+        }
+
 
         System.out.println(sum);
     }

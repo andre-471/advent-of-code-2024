@@ -1,15 +1,14 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Day02 {
     public static void main(String[] args) {
-//        partOne();
+        partOne();
         partTwo();
     }
 
     public static void partOne() {
-        ArrayList<String> data = FileHelper.readWithFiles("input/Day02");
+        ArrayList<String> data = FileHelper.read("input/Day02");
 
         int sum = (int) data.stream()
                 // Convert all strings into arrays
@@ -36,7 +35,7 @@ public class Day02 {
     }
 
     public static void partTwo() {
-        ArrayList<String> data = FileHelper.readWithFiles("input/Day02");
+        ArrayList<String> data = FileHelper.read("input/Day02");
 //        System.out.println(data);
 
         int sum = (int) data.stream()
