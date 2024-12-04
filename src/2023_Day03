@@ -1,0 +1,96 @@
+import java.util.ArrayList;
+
+public class Day03 {
+    public static void main(String[] args) {
+        partOne();
+
+    }
+
+    public static void partOne() {
+        ArrayList<String> data = FileHelper.read("input/Day03");
+
+        char[][] grid = new char[data.size()][];
+
+        for (int i = 0; i < data.size(); i++) {
+            char[] row = data.get(i).toCharArray();
+            grid[i] = row;
+        }
+
+        int sum = 0;
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                sum += matches(i, j, grid);
+            }
+        }
+
+        System.out.println(sum);
+    }
+
+    public static void partTwo() {
+    }
+
+    public static int matches(int row, int col, char[][] grid) {
+        if (Character.isDigit(grid[row][col]) || grid[row][col] == '.') {
+            return 0;
+        }
+
+
+        int sum = 0;
+        int maxRow = grid.length - 1;
+
+        if (row - 1 >= 0) {
+            if (grid[row - 1][col] == '.') {
+                sum += track(row - 1, col - 1, grid);
+                sum += track(row - 1, col + 1, grid);
+            }  else {
+                sum += track(row - 1, col, grid);
+            }
+        }
+
+        if (row + 1 <= maxRow) {
+            if (grid[row + 1][col] == '.') {
+                sum += track(row + 1, col - 1, grid);
+                sum += track(row + 1, col + 1, grid);
+            }  else {
+                sum += track(row + 1, col, grid);
+            }
+        }
+
+        sum += track(row, col - 1, grid);
+        sum += track(row, col + 1, grid);
+
+        return sum;
+    }
+
+    public static int track(int row, int col, char[][] grid) {
+        if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
+            return 0;
+        }
+
+        if (!Character.isDigit(grid[row][col])) {
+            return 0;
+        }
+
+        int left = backTrack(row, col, grid);
+        int right = fastTrack(row, col, grid);
+
+        return Integer.parseInt(String.valueOf(grid[row], left, (right - left + 1)));
+    }
+
+    public static int backTrack(int row, int col, char[][] grid) {
+        while (col > 0 && Character.isDigit(grid[row][col - 1])) {
+            col--;
+        }
+
+        return col;
+    }
+
+    public static int fastTrack(int row, int col, char[][] grid) {
+        while (col < grid[row].length - 1 && Character.isDigit(grid[row][col + 1])) {
+            col++;
+        }
+
+        return col;
+    }
+}
