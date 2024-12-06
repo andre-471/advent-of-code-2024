@@ -4,6 +4,7 @@ import java.util.Arrays;
 public class Day06 {
     public static void main(String[] args) {
         partOne();
+        partTwo();
     }
 
     public static void partOne() {
@@ -43,30 +44,25 @@ public class Day06 {
 
         char dir = 'U';
 
-        while (inGrid(x, y, grid)) {
+        int count = 0;
+
+        while (inGrid(x, y, traversedGrid)) {
             int dx = 0;
             int dy = 0;
 
             switch (dir) {
-                case 'U' -> {
-                    dy = -1;
-                }
-                case 'L' -> {
-                    dx = -1;
-                }
-                case 'D' -> {
-                    dy = 1;
-                }
-                case 'R' -> {
-                    dx = 1;
-                }
+                case 'U' -> dy = -1;
+                case 'L' -> dx = -1;
+                case 'D' -> dy = 1;
+                case 'R' -> dx = 1;
             }
             
-            if (inGrid(x + dx, y + dy, grid) && grid[y + dy][x + dx] != '#') {
-                
+            if (inGrid(x + dx, y + dy, traversedGrid) && grid[y + dy][x + dx] != '#' && ifToLoop(x, y, dir, traversedGrid)) {
+                count++;
+                System.out.println(x + ", " + y);
             }
 
-            if (inGrid(x + dx, y + dy, grid) && grid[y + dy][x + dx] == '#') {
+            if (inGrid(x + dx, y + dy, traversedGrid) && grid[y + dy][x + dx] == '#') {
                 dir = switch (dir) {
                     case 'U' -> 'R';
                     case 'R' -> 'D';
@@ -79,6 +75,8 @@ public class Day06 {
                 y += dy;
             }
         }
+
+        System.out.println(count);
     }
     
     public static char[][] createGrid(ArrayList<String> data) {
@@ -123,18 +121,10 @@ public class Day06 {
             int dy = 0;
 
             switch (dir) {
-                case 'U' -> {
-                    dy = -1;
-                }
-                case 'L' -> {
-                    dx = -1;
-                }
-                case 'D' -> {
-                    dy = 1;
-                }
-                case 'R' -> {
-                    dx = 1;
-                }
+                case 'U' -> dy = -1;
+                case 'L' -> dx = -1;
+                case 'D' -> dy = 1;
+                case 'R' -> dx = 1;
             }
 
             if (inGrid(x + dx, y + dy, grid) && grid[y + dy][x + dx] == '#') {
@@ -154,7 +144,7 @@ public class Day06 {
         return grid;
     }
     
-    public static boolean ifTurn(int x, int y, char dir, char[][] grid) {
+    public static boolean ifToLoop(int x, int y, char dir, char[][] grid) {
         int dx = 0;
         int dy = 0;
 
@@ -167,20 +157,24 @@ public class Day06 {
         };
 
         switch (dir) {
-            case 'U' -> {
-                dy = -1;
-            }
-            case 'L' -> {
-                dx = -1;
-            }
-            case 'D' -> {
-                dy = 1;
-            }
-            case 'R' -> {
-                dx = 1;
-            }
+            case 'U' -> dy = -1;
+            case 'L' -> dx = -1;
+            case 'D' -> dy = 1;
+            case 'R' -> dx = 1;
         }
         
-        while (inGrid(x + dx, y + dy, grid) && grid[y + dy][x + dx] != '#')
+        while (inGrid(x + dx, y + dy, grid)) {
+            if (grid[y + dy][x + dx] == '#' && grid[y][x] != 'X') {
+                return false;
+            }
+            if (grid[y + dy][x + dx] == '#' && grid[y][x] == 'X') {
+                return true;
+            }
+
+            x += dx;
+            y += dy;
+        }
+
+        return false;
     }
 }
