@@ -20,3 +20,11 @@ also i saw some of this so i "borrowed" it from other people
 ## Other Important Stuff
 
 i lied
+
+---
+
+## todo
+
+- create a template file
+- combine day05
+- write 2023_day03 to other repo
