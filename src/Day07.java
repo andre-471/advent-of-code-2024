@@ -11,7 +11,8 @@ public class Day07 {
 
         for (String line : data) {
             String[] hi = line.split(": ");
-            ArrayList<Integer> hi2 = Arrays.stream(hi[1].split(" ")).mapToInt(Integer::valueOf).collect(ArrayList::new);
+            ArrayList<Integer> hi2 = Arrays.stream(hi[1].split(" ")).mapToInt(Integer::valueOf).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
         }
     }
 
