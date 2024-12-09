@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Day06 {
     public static void main(String[] args) {
@@ -34,13 +35,49 @@ public class Day06 {
     public static void partTwo() {
         ArrayList<String> data = FileHelper.read("input/test");
 
-        char[][] traversedGrid = traverse(data);
-    
-        char[][] grid = createGrid(data);
+        char[][] traversedGrid = createGrid(data);
+        HashSet<?>[][] gridDir = new HashSet<?>[traversedGrid.length][];
+        for (int i = 0; i < data.size(); i++) {
+            gridDir[i] = new HashSet<?>[traversedGrid[0].length];
+        }
 
-        int[] coord = findStart(grid);
+        int[] coord = findStart(traversedGrid);
         int x = coord[0];
         int y = coord[1];
+
+        char dir = 'U';
+
+        while (inGrid(x, y, traversedGrid)) {
+            traversedGrid[y][x] = 'X';
+
+            int dx = 0;
+            int dy = 0;
+
+            switch (dir) {
+                case 'U' -> dy = -1;
+                case 'L' -> dx = -1;
+                case 'D' -> dy = 1;
+                case 'R' -> dx = 1;
+            }
+
+            if (inGrid(x + dx, y + dy, traversedGrid) && traversedGrid[y + dy][x + dx] == '#') {
+                dir = switch (dir) {
+                    case 'U' -> 'R';
+                    case 'R' -> 'D';
+                    case 'D' -> 'L';
+                    case 'L' -> 'U';
+                    default -> throw new IllegalStateException("Unexpected value: " + dir);
+                };
+            } else {
+                x += dx;
+                y += dy;
+            }
+        }
+
+        char[][] grid = createGrid(data);
+
+        x = coord[0];
+        y = coord[1];
 
         char dir = 'U';
 
@@ -58,8 +95,7 @@ public class Day06 {
             }
             
             if (inGrid(x + dx, y + dy, traversedGrid) && grid[y + dy][x + dx] != '#' && ifToLoop(x, y, dir, traversedGrid)) {
-                count++;
-                System.out.println(x + ", " + y);
+
             }
 
             if (inGrid(x + dx, y + dy, traversedGrid) && grid[y + dy][x + dx] == '#') {
