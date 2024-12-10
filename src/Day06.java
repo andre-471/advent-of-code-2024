@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 
 public class Day06 {
     public static void main(String[] args) {
@@ -9,7 +7,7 @@ public class Day06 {
     }
 
     public static void partOne() {
-        ArrayList<String> data = FileHelper.read("input/test");
+        ArrayList<String> data = FileHelper.read("input/Day06");
 
         char[][] grid = traverse(data);
 
@@ -22,9 +20,6 @@ public class Day06 {
                 }
             }
         }
-        for (char[] row : grid) {
-            System.out.println(Arrays.toString(row));
-        }
         System.out.println(count);
     }
 
@@ -33,13 +28,9 @@ public class Day06 {
     }
 
     public static void partTwo() {
-        ArrayList<String> data = FileHelper.read("input/test");
+        ArrayList<String> data = FileHelper.read("input/Day06");
 
         char[][] traversedGrid = createGrid(data);
-        HashSet<?>[][] gridDir = new HashSet<?>[traversedGrid.length][];
-        for (int i = 0; i < data.size(); i++) {
-            gridDir[i] = new HashSet<?>[traversedGrid[0].length];
-        }
 
         int[] coord = findStart(traversedGrid);
         int x = coord[0];
@@ -47,9 +38,11 @@ public class Day06 {
 
         char dir = 'U';
 
-        while (inGrid(x, y, traversedGrid)) {
-            traversedGrid[y][x] = 'X';
+        int count = 0;
 
+        HashSet<String> positions = new HashSet<>();
+
+        while (inGrid(x, y, traversedGrid)) {
             int dx = 0;
             int dy = 0;
 
@@ -59,6 +52,18 @@ public class Day06 {
                 case 'D' -> dy = 1;
                 case 'R' -> dx = 1;
             }
+
+            if (inGrid(x + dx, y + dy, traversedGrid) && traversedGrid[y + dy][x + dx] != '#' && y + dy != coord[1] && x + dx != coord[0]) {
+
+                char temp = traversedGrid[y + dy][x + dx];
+                traversedGrid[y + dy][x + dx] = '#';
+                if (ifLoop(x, y, dir, traversedGrid)) {
+                    positions.add((x + dx) + "," + (y + dy));
+                }
+
+                traversedGrid[y + dy][x + dx] = temp;
+            }
+
 
             if (inGrid(x + dx, y + dy, traversedGrid) && traversedGrid[y + dy][x + dx] == '#') {
                 dir = switch (dir) {
@@ -74,45 +79,8 @@ public class Day06 {
             }
         }
 
-        char[][] grid = createGrid(data);
-
-        x = coord[0];
-        y = coord[1];
-
-        char dir = 'U';
-
-        int count = 0;
-
-        while (inGrid(x, y, traversedGrid)) {
-            int dx = 0;
-            int dy = 0;
-
-            switch (dir) {
-                case 'U' -> dy = -1;
-                case 'L' -> dx = -1;
-                case 'D' -> dy = 1;
-                case 'R' -> dx = 1;
-            }
-            
-            if (inGrid(x + dx, y + dy, traversedGrid) && grid[y + dy][x + dx] != '#' && ifToLoop(x, y, dir, traversedGrid)) {
-
-            }
-
-            if (inGrid(x + dx, y + dy, traversedGrid) && grid[y + dy][x + dx] == '#') {
-                dir = switch (dir) {
-                    case 'U' -> 'R';
-                    case 'R' -> 'D';
-                    case 'D' -> 'L';
-                    case 'L' -> 'U';
-                    default -> throw new IllegalStateException("Unexpected value: " + dir);
-                };
-            } else {
-                x += dx;
-                y += dy;
-            }
-        }
-
-        System.out.println(count);
+        System.out.println(positions.size());
+        System.out.println(positions);
     }
     
     public static char[][] createGrid(ArrayList<String> data) {
@@ -179,36 +147,40 @@ public class Day06 {
 
         return grid;
     }
-    
-    public static boolean ifToLoop(int x, int y, char dir, char[][] grid) {
-        int dx = 0;
-        int dy = 0;
 
-        dir = switch (dir) {
-            case 'U' -> 'R';
-            case 'R' -> 'D';
-            case 'D' -> 'L';
-            case 'L' -> 'U';
-            default -> throw new IllegalStateException("Unexpected value: " + dir);
-        };
+    public static boolean ifLoop(int x, int y, char dir, char[][] grid) {
+        HashMap<String, HashSet<Character>> gridDir = new HashMap<>();
 
-        switch (dir) {
-            case 'U' -> dy = -1;
-            case 'L' -> dx = -1;
-            case 'D' -> dy = 1;
-            case 'R' -> dx = 1;
-        }
-        
-        while (inGrid(x + dx, y + dy, grid)) {
-            if (grid[y + dy][x + dx] == '#' && grid[y][x] != 'X') {
-                return false;
+        while (inGrid(x, y, grid)) {
+            gridDir.putIfAbsent(x + "," + y, new HashSet<>());
+            gridDir.get(x + "," + y).add(dir);
+
+            int dx = 0;
+            int dy = 0;
+
+            switch (dir) {
+                case 'U' -> dy = -1;
+                case 'L' -> dx = -1;
+                case 'D' -> dy = 1;
+                case 'R' -> dx = 1;
             }
-            if (grid[y + dy][x + dx] == '#' && grid[y][x] == 'X') {
+
+            if (inGrid(x + dx, y + dy, grid) && grid[y + dy][x + dx] == '#') {
+                dir = switch (dir) {
+                    case 'U' -> 'R';
+                    case 'R' -> 'D';
+                    case 'D' -> 'L';
+                    case 'L' -> 'U';
+                    default -> throw new IllegalStateException("Unexpected value: " + dir);
+                };
+            } else {
+                x += dx;
+                y += dy;
+            }
+
+            if (gridDir.getOrDefault(x + "," + y, new HashSet<>()).contains(dir)) {
                 return true;
             }
-
-            x += dx;
-            y += dy;
         }
 
         return false;
