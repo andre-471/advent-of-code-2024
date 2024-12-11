@@ -1,10 +1,14 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Day07 {
     public static void main(String[] args) {
         partOne();
         partTwo();
+//        System.out.println(unconcatenate(100, 10));
+//        System.out.println(testNumberWithConcatenation(11916446, new ArrayList<>(List.of(119L, 16L, 445L))));
+//        System.out.println(testNumberWithConcatenation(80, new ArrayList<>(List.of(6L, 7L, 3L, 5L, 2L))));
     }
 
     public static void partOne() {
@@ -24,43 +28,40 @@ public class Day07 {
     }
 
     public static boolean testNumberWithConcatenation(long base, ArrayList<Long> nums) {
+        if (base < 0 || (base == 0 && !nums.isEmpty())) {
+            return false;
+        }
+
         if (nums.isEmpty()) {
             return base == 0;
         }
 
+
         nums = new ArrayList<>(nums);
         long num = nums.removeLast();
-        long divided = base / num;
+        long divided = base % num == 0 ? base / num : -1;
         long subtracted = base - num;
         long unconcatenated = unconcatenate(base, num);
 
-
-        if (base % num != 0 && unconcatenated == -1) {
-            return testNumber(subtracted, nums);
-        } else if (base % num == 0 && unconcatenated == -1) {
-            return testNumber(divided, nums) || testNumber(subtracted, nums);
-        } else if (base % num != 0 && unconcatenated != -1) {
-            return testNumber(unconcatenated, nums) || testNumber(subtracted, nums);
-        } else {
-            return testNumber(divided, nums) || testNumber(unconcatenated, nums) || testNumber(subtracted, nums);
-        }
+        return testNumberWithConcatenation(divided, nums) || testNumberWithConcatenation(unconcatenated, nums) || testNumberWithConcatenation(subtracted, nums);
     }
 
     public static boolean testNumber(long base, ArrayList<Long> nums) {
+        if (base < 0 || (base == 0 && !nums.isEmpty())) {
+            return false;
+        }
+
         if (nums.isEmpty()) {
             return base == 0;
         }
 
+
         nums = new ArrayList<>(nums);
         long num = nums.removeLast();
-        long divided = base / num;
+        long divided = base % num == 0 ? base / num : -1;
         long subtracted = base - num;
 
-        if (base % num != 0) {
-            return testNumber(subtracted, nums);
-        } else {
-            return testNumber(divided, nums) || testNumber(subtracted, nums);
-        }
+        return testNumber(divided, nums) || testNumber(subtracted, nums);
     }
 
 
@@ -85,7 +86,8 @@ public class Day07 {
         String strOperator = String.valueOf(operator);
         int index = strNum.lastIndexOf(strOperator);
 
-        if (index == strNum.length() - strOperator.length()) {
+
+        if (index > 0 && index == strNum.length() - strOperator.length()) {  // so num != operator
             return Long.parseLong(strNum.substring(0, index));
         } else {
             return -1;
