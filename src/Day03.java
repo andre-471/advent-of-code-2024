@@ -24,7 +24,7 @@ public class Day03 {
             }
         }
 
-        ConsoleHelper.printDayOne(sum);
+        System.out.println(sum);
     }
 
     public static void partTwov1() {
@@ -47,7 +47,7 @@ public class Day03 {
         }
 
 
-        ConsoleHelper.printDayTwo(sum);
+        System.out.println(sum);
     }
 
     public static void partTwov2() {
@@ -69,6 +69,6 @@ public class Day03 {
         }
 
 
-        ConsoleHelper.printDayTwo(sum);
+        System.out.println(sum);
     }
 }

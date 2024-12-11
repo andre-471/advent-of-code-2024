@@ -27,4 +27,17 @@ public class FileHelper {
 
         return "";
     }
+
+    public static char[][] readToArray(String path) {
+        ArrayList<String> data = FileHelper.read(path);
+
+        char[][] grid = new char[data.size()][];
+
+        for (int i = 0; i < data.size(); i++) {
+            char[] row = data.get(i).toCharArray();
+            grid[i] = row;
+        }
+
+        return grid;
+    }
 }
