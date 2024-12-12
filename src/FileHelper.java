@@ -2,6 +2,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class FileHelper {
     public static ArrayList<String> read(String path) {
@@ -28,7 +30,7 @@ public class FileHelper {
         return "";
     }
 
-    public static char[][] readToArray(String path) {
+    public static char[][] readTo2DArray(String path) {
         ArrayList<String> data = FileHelper.read(path);
 
         char[][] grid = new char[data.size()][];
@@ -39,5 +41,9 @@ public class FileHelper {
         }
 
         return grid;
+    }
+
+    public static ArrayList<Character> readToArraylist(String path) {
+        return readToString(path).chars().mapToObj(c -> (char) c).collect(Collectors.toCollection(ArrayList::new));
     }
 }
