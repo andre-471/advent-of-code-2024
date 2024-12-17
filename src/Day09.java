@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Day09 {
     public static void main(String[] args) {
@@ -46,7 +45,7 @@ public class Day09 {
     }
 
     public static void partTwo() {
-        ArrayList<Character> data = FileHelper.readToArraylist("input/test");
+        ArrayList<Character> data = FileHelper.readToArraylist("input/Day09");
         ArrayList<File> disk = new ArrayList<>();
         int id = 0;
         boolean empty = false;
@@ -64,19 +63,24 @@ public class Day09 {
         }
 
         int i = disk.size() - 1;
+
         while (i >= 0) {
             File file = disk.get(i);
-            for (int j = 0; j < i; j++) {
-                File otherFile = disk.get(j);
-                if (otherFile.number == null && file.size <= otherFile.size) {
-                    disk.set(j, file);
-                    if (file.size < otherFile.size) {
-                        disk.add(j + 1, new File(null, otherFile.size - file.size));
-                        i++;
+            if (file.number != null) {
+                for (int j = 0; j < i; j++) {
+                    File otherFile = disk.get(j);
+                    if (otherFile.number == null && file.size <= otherFile.size) {
+                        disk.set(j, file);
+                        disk.set(i, new File(null, file.size));
+                        if (file.size < otherFile.size) {
+                            disk.add(j + 1, new File(null, otherFile.size - file.size));
+                            i++;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
+
 
             i--;
         }
@@ -88,8 +92,18 @@ public class Day09 {
                 actualDisk.add(file.number);
             }
         }
-
         System.out.println(actualDisk);
+
+        long sum = 0;
+
+        for (int j = 0; j < actualDisk.size(); j++) {
+            Integer num = actualDisk.get(j);
+            if (num != null) {
+                sum += (long) j * num;
+            }
+        }
+
+        System.out.println(sum);
     }
 
     public static class File {
